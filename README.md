@@ -1,6 +1,3 @@
-
-
-
 # Reseller
 
 The project is a React Native application that implements a navigation system using React Navigation and Firebase for authentication. The app provides functionality for user login, signup, and navigation between different screens.
