@@ -36,10 +36,10 @@ const SidebarContainer = styled.ScrollView`
 `;
 
 const CloseButton = styled.TouchableOpacity`
-  margin-top: 16px;
-  padding: 8px;
-  background-color: #ccc;
-  align-items: center;
+  margin-top: 10px;
+  padding: 6px;
+  background-color: white;
+  margin-left: -5px;
 `;
 
 const StyledFontAwesome = styled(FontAwesome)`
@@ -80,9 +80,8 @@ const App = () => {
           <View style={{ height: '100%' }}>
             <SidebarContainer>
               <CloseButton onPress={() => navigation.closeDrawer()}>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <StyledFontAwesome name="arrow-left" size={44} color="#005DA9" />
-                <Text style={{ marginLeft: 5, color:'black' }}>Back</Text>
+              <View style={{ flexDirection: 'row' }}>
+                <StyledFontAwesome name="arrow-left" size={24} color="#005DA9" />
               </View>
               </CloseButton>
 
