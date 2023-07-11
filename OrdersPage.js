@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ScrollView, View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
+import { ScrollView, View, Text, TouchableOpacity, ActivityIndicator, BackHandler, ToastAndroid } from "react-native";
 import styled from "styled-components/native";
 import { Picker } from '@react-native-picker/picker';
 
@@ -11,6 +11,9 @@ const OrdersPage = () => {
   const [loadedData, setLoadedData] = useState([]);
   const [expandedCardId, setExpandedCardId] = useState(null);
   const [loading, setLoading] = useState(false); // Track loading state
+  const [isCardOpen, setIsCardOpen] = useState(false); // Track card toggle state
+  const [isBackButtonPressed, setIsBackButtonPressed] = useState(false); // Track back button press
+
 
   const ordersData = [
     {"id": 1, "creationDate": "2023-06-01", "ecomOrderNo": "ECOM123", "poNumber": "PO456", "sapOrderNo": "SAP789", "netValue": "$100", "status": "Pending", "shipToParty": "ABC Company", "buyer": "John Doe", "noOfLinesDelivered": 2, "materialNumber": "M123", "brand": "Brand X", "quantity": 10, "unitValue": "$10", "deliveredQty": 5, "balanceQty": 5, "lineStatus": "Delivered", "customerCode": "C001"},
@@ -123,7 +126,24 @@ const OrdersPage = () => {
     fetchData(1);
   }, [selectedShipToParty]);
 
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      handleBackPress
+    );
   
+    return () => backHandler.remove();
+  }, []);
+
+  const handleBackPress = () => {
+    if (isCardOpen) {
+      // If the card is open, toggle and close it
+      toggleCardExpansion(expandedCardId);
+      return true; // Prevent default back button behavior
+    }
+  };
+
+
     const fetchData = async (page) => {
       const startIndex = (page - 1) * pageSize;
       const endIndex = startIndex + pageSize;
@@ -165,11 +185,16 @@ const OrdersPage = () => {
     }
   };
 
-
   const toggleCardExpansion = (cardId) => {
-    setExpandedCardId((expandedCardId) =>
-      expandedCardId === cardId ? null : cardId
-    );
+    if (expandedCardId === cardId && isCardOpen) {
+      // If the card is already open, toggle and close it
+      setIsCardOpen(false);
+      setExpandedCardId(null);
+    } else {
+      // If the card is closed or a different card is open, toggle and open the selected card
+      setIsCardOpen(true);
+      setExpandedCardId(cardId);
+    }
   };
 
   useEffect(() => {
