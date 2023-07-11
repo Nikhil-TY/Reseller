@@ -161,6 +161,7 @@ const SignupPage = () => {
             firstName,
             lastName,
             mobileNumber,
+            email, 
           })
           .then(() => {
             Alert.alert('Success', 'Signup successful. Please login again.', [

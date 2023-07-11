@@ -6,6 +6,7 @@ import LoginPage from './LoginPage';
 import SignupPage from './SignupPage';
 import HomePage from './HomePage';
 import OrdersPage from './OrdersPage';
+import ProfilePage from './Profile.js';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
@@ -84,6 +85,10 @@ const App = () => {
                 <StyledFontAwesome name="arrow-left" size={24} color="#005DA9" />
               </View>
               </CloseButton>
+              <MenuItem onPress={() => navigation.navigate('Profile')}>
+                  <StyledFontAwesome name="user" size={24} color="#005DA9" />
+                  <MenuItemText>Profile</MenuItemText>
+                </MenuItem>
 
               <MenuItem onPress={() => navigation.navigate('Home')}>
                 <StyledFontAwesome name="home" size={24} color="#005DA9" />
@@ -93,7 +98,7 @@ const App = () => {
                 <StyledFontAwesome name="shopping-cart" size={24} color="#005DA9" />
                 <MenuItemText>Orders</MenuItemText>
               </MenuItem>
-              <MenuItem
+             <MenuItem
                 onPress={() => {
                   firebase
                     .auth()
@@ -129,6 +134,16 @@ const App = () => {
             headerShown: false,
           }}
         />
+         <Drawer.Screen
+          name="Profile"
+          component={ProfilePage}
+          options={{
+            headerTitleStyle: {
+              color: '#005DA9',
+            },
+            headerTintColor: '#005DA9', 
+          }}
+        />
         <Drawer.Screen
           name="Home"
           component={HomePage}
@@ -157,7 +172,7 @@ const App = () => {
             headerTintColor: '#005DA9', 
           }}
         />
-      </Drawer.Navigator>
+       </Drawer.Navigator>
     </NavigationContainer>
   );
 };
