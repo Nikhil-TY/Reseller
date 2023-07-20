@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components/native';
 import { useNavigation } from '@react-navigation/native';
-import { Alert } from 'react-native';
+import { Button, TextInput, Alert, ActivityIndicator, View } from 'react-native';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
@@ -10,6 +10,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 const SignupPage = () => {
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [mobileNumber, setMobileNumber] = useState('');
@@ -131,38 +132,67 @@ const SignupPage = () => {
       setRetypePasswordError(true);
       return;
     }
-  
-  
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then((userCredential) => {
-        const { user } = userCredential;
 
-        // Save additional user information to Firebase Firestore
-        firebase.firestore().collection('users').doc(user.uid).set({
-          firstName,
-          lastName,
-          mobileNumber,
-        })
-        .then(() => {
-          Alert.alert('Success', 'Signup successful. Please login again.', [
-            {
-              text: 'OK',
-              onPress: () => navigation.navigate('Login'),
-            },
-          ]);
+    setLoading(true);
+  
+     // Check if the email is already registered
+  firebase
+  .auth()
+  .fetchSignInMethodsForEmail(email)
+  .then((signInMethods) => {
+    if (signInMethods && signInMethods.length > 0) {
+      // Email is already registered
+      Alert.alert('Error', 'A user has already signed up using this email ID.', [
+      {
+        text: 'OK',
+        onPress: () => navigation.navigate('Login'), // Redirect to login page
+      },
+    ]);
+    } else {
+      // Email is not registered, proceed with sign up
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          const { user } = userCredential;
+
+          // Save additional user information to Firebase Firestore
+          firebase.firestore().collection('users').doc(user.uid).set({
+            firstName,
+            lastName,
+            mobileNumber,
+            email, 
+          })
+          .then(() => {
+            Alert.alert('Success', 'Signup successful. Please login again.', [
+              setLoading(false),
+              {
+                text: 'OK',
+                onPress: () => navigation.navigate('Login'),
+              },
+            ]);
+          })
+          .catch((error) => {
+            console.error('Error saving user information:', error);
+            Alert.alert('Error', 'Signup failed. Please try again.');
+            setLoading(false);
+          });
         })
         .catch((error) => {
-          console.error('Error saving user information:', error);
+          console.error('Signup error:', error);
           Alert.alert('Error', 'Signup failed. Please try again.');
         });
-      })
-      .catch((error) => {
-        console.error('Signup error:', error);
-        Alert.alert('Error', 'Signup failed. Please try again.');
-      });
-  };
+    }
+  })
+  .catch((error) => {
+    console.error('Fetch sign-in methods error:', error);
+    Alert.alert('Error', 'An error occurred while checking the email. Please try again.');
+  })
+  .finally(() => {
+    setLoading(false); // Set loading state to false
+  });
+};
+
 
   return (
     <Container>
@@ -276,6 +306,11 @@ const SignupPage = () => {
         <ButtonText>Submit</ButtonText>
       </SubmitButton>
       </ScrollView>
+      {loading && (
+        <Overlay>
+          <ActivityIndicator size="large" color="#ffffff" />
+        </Overlay>
+      )}
     </Container>
   );
 };
@@ -352,6 +387,17 @@ const ToggleVisibilityButton = styled.TouchableOpacity`
 const VisibilityButtonText = styled.Text`
 color: #005DA9;
 font-size: 14px;
+`;
+
+const Overlay = styled.View`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
 `;
 
 export default SignupPage;

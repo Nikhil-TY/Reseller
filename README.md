@@ -1,84 +1,71 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Reseller
 
-# Getting Started
+The project is a React Native application that implements a navigation system using React Navigation and Firebase for authentication. The app provides functionality for user login, signup, and navigation between different screens.
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+## Installation
 
-## Step 1: Start the Metro Server
+To run the project locally, follow these steps:
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+1.  Clone the repository: `git clone https://github.com/Nikhil-TY/Reseller.git`
+2.  Install dependencies: `npm install`
+3.  Configure Firebase:
+    -   Create a Firebase project on the Firebase console.
+    -   Copy the Firebase project configuration object and replace it in the `firebaseConfig` variable in the `App.js` file.
+    -   Enable Firebase Authentication with the necessary authentication providers.
+4.  Run the app in android: `npm react-native run android`
 
-To start Metro, run the following command from the _root_ of your React Native project:
+## Dependencies
 
-```bash
-# using npm
-npm start
+The project relies on the following dependencies:
 
-# OR using Yarn
-yarn start
-```
+-   @react-native-async-storage/async-storage: ^1.18.2
+-   @react-native-community/cli-platform-android: ^11.3.3
+-   @react-native-community/cli-platform-ios: ^11.3.3
+-   @react-native-community/masked-view: ^0.1.11
+-   @react-native-firebase/app: ^18.0.0
+-   @react-native-firebase/auth: ^18.0.0
+-   @react-native-firebase/firestore: ^18.0.0
+-   @react-native-picker/picker: ^2.4.10
+-   @react-navigation/drawer: ^6.6.3
+-   @react-navigation/native: ^6.1.7
+-   @react-navigation/stack: ^6.3.16
+-   firebase: ^9.22.2
+-   react: 18.2.0
+-   react-native: 0.71.11
+-   react-native-gesture-handler: ^2.12.0
+-   react-native-reanimated: ^3.3.0
+-   react-native-safe-area-context: ^4.6.3
+-   react-native-screens: ^3.22.0
+-   react-native-splash-screen: ^3.3.0
+-   react-native-svg: ^13.9.0
+-   react-native-vector-icons: ^9.2.0
+-   react-navigation-stack: ^2.10.4
+-   react-pro-sidebar: ^1.1.0-alpha.1
+-   react-router: ^6.14.0
+-   styled-components: ^4.1.3
 
-## Step 2: Start your Application
+Make sure to have these dependencies installed in your project by running `npm install`.
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+## Node.js and npm Versions
 
-### For Android
+The project is developed using the following versions of Node.js and npm:
 
-```bash
-# using npm
-npm run android
+-   Node.js: 18.16.0
+-   npm: 9.7.1
 
-# OR using Yarn
-yarn android
-```
-
-### For iOS
-
-```bash
-# using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
-```
-
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
-
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
-
-## Step 3: Modifying your App
-
-Now that you have successfully run the app, let's modify it.
-
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
-
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+Make sure you have Node.js and npm installed with the specified versions in order to ensure compatibility with the project.
 
 
-# To add vector icons
+## Usage
 
-https://www.npmjs.com/package/react-native-vector-icons - Follow the atricles which explains how this has to be done in IOS and Android
+The entry point of the application is the `App` component in the `App.txs` file. The `App` component sets up the navigation system and renders different screens based on the user's actions.
+
+The app supports the following screens:
+
+-   `LoginPage`: Allows users to log in to the app.
+-   `SignupPage`: Allows new users to create an account.
+-   `HomePage`: Displays the home screen with customized header and navigation drawer.
+-   `OrdersPage`: Displays the orders screen with a customized header.
+
+The navigation between screens is handled using the React Navigation library.
+

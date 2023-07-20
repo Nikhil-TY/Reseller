@@ -1,5 +1,5 @@
-import React from 'react';
-import { Alert, TouchableOpacity } from 'react-native';
+import React, { useState }  from 'react';
+import { Button, Alert, View, TextInput, TouchableOpacity, Text, Image, ActivityIndicator } from 'react-native';
 import styled from 'styled-components/native';
 import { useNavigation } from '@react-navigation/native';
 import firebase from 'firebase/compat/app';
@@ -11,6 +11,8 @@ const LoginPage = () => {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [highlightedField, setHighlightedField] = React.useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleSignupPress = () => {
     navigation.navigate('Signup');
@@ -32,26 +34,25 @@ const LoginPage = () => {
     setHighlightedField('password');
   };
 
+  
   const handleSubmit = () => {
     if (!email || !password) {
       Alert.alert('Error', 'Please fill in all fields');
       return;
     }
 
+    setIsLoading(true);
+
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then((userCredential) => {
-        Alert.alert('Success', 'Login successful', [
-          {
-            text: 'OK',
-            onPress: () => navigation.navigate('Home'),
-          },
-        ]);
-      })
+        setIsLoading(false);
+         navigation.navigate('Home');
+       })
       .catch((error) => {
-        console.error('Login error:', error);
-        Alert.alert('Error', 'Login failed. Please check your credentials and try again.');
+        setErrorMessage('Invalid credentials. Please check your email and password.');
+        setIsLoading(false);
       });
   };
 
@@ -62,6 +63,9 @@ const LoginPage = () => {
         width={100} // Adjust the width as needed
         height={100} // Adjust the height as needed
       />
+
+{errorMessage !== '' && <ErrorMessage>{errorMessage}</ErrorMessage>}
+
       <Input
         placeholder="Username: @coats.com"
         placeholderTextColor="#aaa"
@@ -78,8 +82,13 @@ const LoginPage = () => {
         highlighted={highlightedField === 'password'}
       />
 
-      <ButtonContainer onPress={handleSubmit}>
-        <ButtonText>Submit</ButtonText>
+     
+      <ButtonContainer onPress={handleSubmit} disabled={isLoading}>
+        {isLoading ? (
+          <ActivityIndicator size="small" color="#fff" />
+        ) : (
+          <ButtonText>Submit</ButtonText>
+        )}
       </ButtonContainer>
 
       <SignupLinkText onPress={handleSignupPress}>Sign up</SignupLinkText>
@@ -96,8 +105,14 @@ const Container = styled.View`
 `;
 
 const LogoImage = styled(SvgUri)`
-margin-top: 50px; 
-margin-bottom: 100px;
+margin-top: 80px; 
+margin-bottom: 80px;
+`;
+
+const ErrorMessage = styled.Text`
+  color: red;
+  text-align: center;
+  /* Add other styles as needed */
 `;
 
 const Input = styled.TextInput`
@@ -133,7 +148,7 @@ const SignupLinkText = styled.Text`
   font-weight: bold;
   text-align: center;
   margin-top: 20px;
-  margin-bottom: 70px;
+  margin-bottom: 70px
   text-decoration-line: underline;
 `;
 

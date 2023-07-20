@@ -1,39 +1,22 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import React, { useEffect, useState } from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-  Alert,
-} from 'react-native';
-
-import {
-  Colors,
-} from 'react-native/Libraries/NewAppScreen';
-
-import firebase from 'firebase/compat/app';
+import { NavigationContainer, useNavigation  } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import styled from 'styled-components/native';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import SplashScreen from './SplashScreen';
-import { NavigationContainer } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import LoginPage from './LoginPage';
 import SignupPage from './SignupPage';
 import HomePage from './HomePage';
 import OrdersPage from './OrdersPage';
+import ProfilePage from './Profile.js';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
+import { AppRegistry, View, TouchableOpacity, Text, Alert } from 'react-native';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import styled from 'styled-components/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Your Firebase project configuration
 const firebaseConfig = {
+  // Your Firebase project configuration
   apiKey: "AIzaSyAe_Hxn3bW3tSYV2FUlOu24Oq_7WUQAldI",
   authDomain: "reseller-c6a78.firebaseapp.com",
   projectId: "reseller-c6a78",
@@ -54,10 +37,10 @@ const SidebarContainer = styled.ScrollView`
 `;
 
 const CloseButton = styled.TouchableOpacity`
-  margin-top: 16px;
-  padding: 8px;
-  background-color: #ccc;
-  align-items: center;
+  margin-top: 10px;
+  padding: 6px;
+  background-color: white;
+  margin-left: -5px;
 `;
 
 const StyledFontAwesome = styled(FontAwesome)`
@@ -76,43 +59,8 @@ const MenuItemText = styled.Text`
   color: black;
   margin-left: 10px;
 `;
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
 
-function Section({children, title}: SectionProps): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
-
-function App(): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
+const App = () => {
   const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => {
@@ -127,17 +75,20 @@ function App(): JSX.Element {
   }
 
   return (
-      <NavigationContainer>
+    <NavigationContainer>
       <Drawer.Navigator
         drawerContent={({ navigation }) => (
           <View style={{ height: '100%' }}>
             <SidebarContainer>
               <CloseButton onPress={() => navigation.closeDrawer()}>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <StyledFontAwesome name="arrow-left" size={44} color="#005DA9" />
-                <Text style={{ marginLeft: 5, color:'black' }}>Back</Text>
+              <View style={{ flexDirection: 'row' }}>
+                <StyledFontAwesome name="arrow-left" size={24} color="#005DA9" />
               </View>
               </CloseButton>
+              <MenuItem onPress={() => navigation.navigate('Profile')}>
+                  <StyledFontAwesome name="user" size={24} color="#005DA9" />
+                  <MenuItemText>Profile</MenuItemText>
+                </MenuItem>
 
               <MenuItem onPress={() => navigation.navigate('Home')}>
                 <StyledFontAwesome name="home" size={24} color="#005DA9" />
@@ -147,7 +98,7 @@ function App(): JSX.Element {
                 <StyledFontAwesome name="shopping-cart" size={24} color="#005DA9" />
                 <MenuItemText>Orders</MenuItemText>
               </MenuItem>
-              <MenuItem
+             <MenuItem
                 onPress={() => {
                   firebase
                     .auth()
@@ -167,8 +118,8 @@ function App(): JSX.Element {
               </MenuItem>
             </SidebarContainer>
           </View>
-        )}>
-
+        )}
+      >
         <Drawer.Screen
           name="Login"
           component={LoginPage}
@@ -176,7 +127,6 @@ function App(): JSX.Element {
             headerShown: false,
           }}
         />
-
         <Drawer.Screen
           name="Signup"
           component={SignupPage}
@@ -184,7 +134,16 @@ function App(): JSX.Element {
             headerShown: false,
           }}
         />
-
+         <Drawer.Screen
+          name="Profile"
+          component={ProfilePage}
+          options={{
+            headerTitleStyle: {
+              color: '#005DA9',
+            },
+            headerTintColor: '#005DA9', 
+          }}
+        />
         <Drawer.Screen
           name="Home"
           component={HomePage}
@@ -203,7 +162,6 @@ function App(): JSX.Element {
             ),
           })}
         />
-
         <Drawer.Screen
           name="Orders"
           component={OrdersPage}
@@ -214,29 +172,9 @@ function App(): JSX.Element {
             headerTintColor: '#005DA9', 
           }}
         />
-
        </Drawer.Navigator>
     </NavigationContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
 
 export default App;
